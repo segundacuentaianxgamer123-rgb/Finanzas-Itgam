@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Aplicación de los Límites del Cálculo Diferencial en una Inversión Financiera</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Aplicación de los Límites del Cálculo Diferencial en una Inversión Financiera</h1>
+      <p><strong>Nombre:</strong> Yuliana Rojo Álvarez, Ocampo Olivares Jonathan Davis</p>
+      <p><strong>Materia:</strong> Cálculo Diferencial</p>
+      <p><strong>Profesor:</strong> RAFAEL TOLEDANO ALATOMA</p>
+      <img src="imagen.png" alt="Gráfica económica" class="imagen">
+    </header>
+
+    <section class="formulario">
+      <h2>Simulador de Portafolio de Inversión</h2>
+      <form id="inversionForm">
+        <input type="text" id="empresa" placeholder="Empresa" required>
+        <input type="number" id="dinero" placeholder="Dinero ingresado" required>
+        <input type="number" id="capital" placeholder="Capital inicial" required>
+        <input type="number" id="tiempo" placeholder="Meses (t)" required>
+        <button type="submit">Calcular</button>
+      </form>
+    </section>
+
+    <section class="grafica">
+      <h2>Resultados de la Inversión</h2>
+      <canvas id="grafico"></canvas>
+    </section>
+
+    <section class="resultados">
+      <h2>Datos</h2>
+      <table id="tablaResultados">
+        <thead>
+          <tr>
+            <th>Empresa</th>
+            <th>Dinero ingresado</th>
+            <th>Capital inicial</th>
+            <th>Meses</th>
+            <th>Rendimiento</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section class="conclusiones">
+      <h2>Conclusiones</h2>
+      <div id="listaConclusiones"></div>
+    </section>
+
+    <section class="teoria-final">
+      <h2>Aplicación de los Límites en Inversiones</h2>
+      <p>Uno de sus temas más importantes son los límites, que sirven para conocer hacia qué valor se aproxima una función cuando una variable cambia constantemente.</p>
+      <p><strong>Problema cotidiano:</strong> inversión con ganancia limitada.</p>
+      <p>Una persona decide invertir en un fondo financiero que genera rendimientos cada mes, pero cada vez menores porque el mercado se estabiliza.</p>
+      <p>El rendimiento total de su inversión puede representarse con la función:</p>
+      <p><code>G(t) = (1000t) / (t + 10)</code></p>
+      <h3>Cálculo del límite paso a paso</h3>
+      <p><code>lim (t → ∞) (1000t / (t + 10)) = 1000</code></p>
+      <p>✅ Resultado: El límite es 1000 pesos.</p>
+      <h3>Interpretación</h3>
+      <p>El límite significa que la ganancia total se aproxima a $1000 pesos, aunque pasen muchos meses.</p>
+      <ul>
+        <li>Saber cuándo una inversión deja de crecer.</li>
+        <li>Predecir el rendimiento máximo de un ahorro o negocio.</li>
+        <li>Decidir si conviene seguir invirtiendo o retirar el dinero.</li>
+      </ul>
+    </section>
+  </div>
+</body>
+</html>
