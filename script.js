@@ -1,6 +1,7 @@
 const empresas = {};
 const colores = ["#ff6384", "#36a2eb", "#4bc0c0", "#9966ff", "#ff9f40"];
 let colorIndex = 0;
+let inversionista = ""; // guardaremos el nombre aquí
 
 const ctx = document.getElementById("grafico").getContext("2d");
 const chart = new Chart(ctx, {
@@ -14,7 +15,7 @@ const chart = new Chart(ctx, {
     plugins: {
       title: {
         display: true,
-        text: "Comparación de rendimientos (Límite: $1000)",
+        text: "Comparación de rendimientos (modelo saturación proporcional)",
         color: "#fff"
       },
       legend: {
@@ -23,17 +24,22 @@ const chart = new Chart(ctx, {
     },
     scales: {
       x: { ticks: { color: "#fff" } },
-      y: { beginAtZero: true, suggestedMax: 1100, ticks: { color: "#fff" } }
+      y: { beginAtZero: true, ticks: { color: "#fff" } }
     }
   }
 });
 
-function calcularRendimiento(t) {
-  return (1000 * t) / (t + 10);
+// Nueva fórmula: saturación proporcional al capital
+// G(t) = I * rMax * (1 - e^(-k t))
+function calcularRendimiento(t, capital, dinero, rMax = 0.4, k = 0.2) {
+  const I = capital + dinero; // inversión total
+  return I * rMax * (1 - Math.exp(-k * t));
 }
 
 document.getElementById("inversionForm").addEventListener("submit", (e) => {
   e.preventDefault();
+
+  inversionista = document.getElementById("inversionista").value.trim();
 
   const empresa = document.getElementById("empresa").value.trim();
   const dinero = parseFloat(document.getElementById("dinero").value);
@@ -42,21 +48,19 @@ document.getElementById("inversionForm").addEventListener("submit", (e) => {
 
   if (!empresa) return;
 
-  const rendimiento = calcularRendimiento(tiempo);
+  const rendimiento = calcularRendimiento(tiempo, capital, dinero);
 
   // Si la empresa ya existe, preguntar confirmación
   if (empresas[empresa]) {
     const confirmar = confirm(`¿Seguro que lo deseas? Modificarás los datos de la empresa ${empresa}`);
     if (!confirmar) return;
 
-    // Guardar valor anterior con fecha
     const fecha = new Date().toLocaleString();
     empresas[empresa].anterior = {
       rendimiento: empresas[empresa].rendimiento,
       fecha: fecha
     };
 
-    // Actualizar datos
     empresas[empresa].dinero = dinero;
     empresas[empresa].capital = capital;
     empresas[empresa].tiempo = tiempo;
@@ -87,14 +91,12 @@ function actualizarGrafica() {
   Object.keys(empresas).forEach(nombre => {
     const e = empresas[nombre];
 
-    // Barra actual
     chart.data.datasets.push({
       label: `${nombre} (actual)`,
       data: [e.rendimiento],
       backgroundColor: e.color
     });
 
-    // Barra anterior si existe
     if (e.anterior) {
       chart.data.datasets.push({
         label: `${nombre} (anterior - ${e.anterior.fecha})`,
@@ -144,9 +146,9 @@ function actualizarConclusiones() {
     let conclusion;
 
     if (e.rendimiento > inversionTotal) {
-      conclusion = `La empresa ${nombre} es rentable porque su rendimiento ($${e.rendimiento.toFixed(2)}) supera la inversión total ($${inversionTotal.toFixed(2)}).`;
+      conclusion = `${inversionista}, la empresa ${nombre} es rentable porque su rendimiento ($${e.rendimiento.toFixed(2)}) supera la inversión total ($${inversionTotal.toFixed(2)}).`;
     } else {
-      conclusion = `La empresa ${nombre} no es rentable porque su rendimiento ($${e.rendimiento.toFixed(2)}) es menor que la inversión total ($${inversionTotal.toFixed(2)}).`;
+      conclusion = `${inversionista}, la empresa ${nombre} no conviene porque su rendimiento ($${e.rendimiento.toFixed(2)}) es menor que la inversión total ($${inversionTotal.toFixed(2)}).`;
     }
 
     const p = document.createElement("p");
